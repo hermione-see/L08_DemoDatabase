@@ -7,7 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
@@ -18,6 +20,10 @@ public class MainActivity extends AppCompatActivity {
 
     Button btnInsert, btnGetTask;
     TextView tvResult;
+    ListView lvTask;
+
+    ArrayList<String> alTasks;
+    ArrayAdapter<String> aaTasks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +33,11 @@ public class MainActivity extends AppCompatActivity {
         btnInsert = findViewById(R.id.buttonInsert);
         btnGetTask = findViewById(R.id.buttonGetTask);
         tvResult = findViewById(R.id.textViewResult);
+        lvTask = findViewById(R.id.lv);
+
+        alTasks = new ArrayList<String>();
+        aaTasks = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, alTasks);
+        lvTask.setAdapter(aaTasks);
 
         btnInsert.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -52,12 +63,11 @@ public class MainActivity extends AppCompatActivity {
                 ArrayList<String> data = db.getTaskContent();
                 db.close();
 
-                String txt = "";
                 for (int i = 0; i < data.size(); i++) {
                     Log.d("Database Content", i +". "+data.get(i));
-                    txt += i + ". " + data.get(i) + "\n";
+                    alTasks.add(data.toString());
                 }
-                tvResult.setText(txt);
+                aaTasks.notifyDataSetChanged();
             }
         });
 
