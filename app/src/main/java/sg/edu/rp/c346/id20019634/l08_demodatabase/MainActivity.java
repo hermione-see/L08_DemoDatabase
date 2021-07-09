@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -20,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
     Button btnInsert, btnGetTask;
     TextView tvResult;
+    EditText etTask, etDate;
     ListView lvTask;
 
     ArrayList<String> alTasks;
@@ -33,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
         btnInsert = findViewById(R.id.buttonInsert);
         btnGetTask = findViewById(R.id.buttonGetTask);
         tvResult = findViewById(R.id.textViewResult);
+        etDate = findViewById(R.id.editTextDate);
+        etTask = findViewById(R.id.editTextTask);
         lvTask = findViewById(R.id.lv);
 
         alTasks = new ArrayList<String>();
@@ -47,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
                 DBHelper db = new DBHelper(MainActivity.this);
 
                 // Insert a task
-                db.insertTask("Submit RJ", "25 Apr 2021");
+                db.insertTask(etTask.getText().toString(), etDate.getText().toString());
 
             }
         });
@@ -57,15 +61,16 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Create the DBHelper object, passing in the
                 // activity's Context
+                alTasks.clear();
                 DBHelper db = new DBHelper(MainActivity.this);
 
                 // Insert a task
-                ArrayList<String> data = db.getTaskContent();
+                ArrayList<Task> data = db.getTasks();
                 db.close();
 
                 for (int i = 0; i < data.size(); i++) {
                     Log.d("Database Content", i +". "+data.get(i));
-                    alTasks.add(data.toString());
+                    alTasks.add(data.get(i).toString());
                 }
                 aaTasks.notifyDataSetChanged();
             }
